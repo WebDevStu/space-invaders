@@ -18,20 +18,46 @@ SI.Canvas = function () {
 _.extend(SI.Canvas.prototype, {
 
 
-
+    // based on type
+    matrix: {
+        'alien1': {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0
+        },
+        'alien2': {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0
+        },
+        'alien3': {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0
+        },
+        'spaceship': {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0
+        }
+    },
 
     addComponents: function () {
 
-        var img,
-            url = '/images/new/test';
+        var component;
 
-        _.listenTo(url, function () {
+        _.listenTo('alien1', function () {
             console.log('loaded');
         }, this);
 
-        img = new SI.Component(url);
+        component = new SI.Component('alien1');
 
-        console.log(img);
+        document.body.appendChild(component.image);
+
     },
 
 
