@@ -4,6 +4,15 @@ var SI = {},
 
     _ = {
 
+
+        /**
+         * extend
+         * extends one object into another
+         *
+         * @param object {Object}
+         * @param extend {Object}
+         * @returns {Object}
+         */
         extend: function (object, extend) {
 
             for (var prop in extend) {
@@ -67,8 +76,17 @@ var SI = {},
             if (_.events[id] && _.events[id].length) {
 
                 _.events[id].forEach(function (callback) {
-                    callback.apply(callback.scope || this, args);
+                    callback.call(callback.scope || this, args);
                 }, this);
             }
+        },
+
+
+        isEven: function (n) {
+            return (n % 2 === 0);
+        },
+
+        isOdd: function (n) {
+            return (n % 2 !== 0);
         }
     };

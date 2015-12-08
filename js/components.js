@@ -71,8 +71,8 @@ _.extend(SI.Component.prototype, {
             (this.options.arms) ? image.y : image.height,
             image.width,
             image.height,
-            (this.options.index * 44) + 40, // change with x axis counter
-            (this.options.alien * 40) + 40, // change with y axis counter
+            (this.options.index * 44) + this.options.left, // change with x axis counter
+            (this.options.alien * 40) + this.options.top, // change with y axis counter
             image.width,
             image.height
         );
