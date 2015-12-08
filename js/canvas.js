@@ -1,66 +1,54 @@
 
 SI.Canvas = function () {
 
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
+    // listeners with scope
+    _.listenTo({
+        'frame:change': this.draw,
+        'sprite:loaded': this.addComponents
+    }, this);
 
+    this.canvas = document.createElement('canvas');
     this.canvas.height = 500;
-    this.canvas.width = 600;
+    this.canvas.width = 700;
+
+    this.ctx = this.canvas.getContext('2d');
 
     document.body.appendChild(this.canvas);
 
-    this.addComponents();
+    this.sprite = new Image();
+    this.sprite.src = './image/components.png';
+    this.sprite.onload = function () {
+        _.trigger('sprite:loaded');
+    };
 
-    _.listenTo('frame:change', this.draw, this);
+    this.aliens = {};
+    this.armsUp = true;
 };
 
 
 _.extend(SI.Canvas.prototype, {
 
 
-    // based on type
-    matrix: {
-        'alien1': {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0
-        },
-        'alien2': {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0
-        },
-        'alien3': {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0
-        },
-        'spaceship': {
-            width: 0,
-            height: 0,
-            x: 0,
-            y: 0
-        }
-    },
 
     addComponents: function () {
 
-        var component;
+        var xAxis = 0,
+            yAxis = 0,
+            i;
 
-        _.listenTo('alien1', function () {
-            console.log('loaded');
-        }, this);
+        for (i = 0; i < 50; i += 1) {
 
-        component = new SI.Component('alien1');
+            yAxis = Math.floor(i / 10);
+            xAxis = i - (yAxis * 10);
 
-        document.body.appendChild(component.image);
-
+            this.aliens[i] = new SI.Component(this.sprite, {
+                ctx: this.ctx,
+                alien: yAxis,
+                index: xAxis,
+                arms: this.armsUp
+            });
+        }
     },
-
-
 
 
     /**
@@ -73,7 +61,10 @@ _.extend(SI.Canvas.prototype, {
 
         // every half second
         if (frame % 500 === 0) {
-            _.trigger('image:swap');
+            console.log('half')
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.armsUp = !this.armsUp;
+            this.addComponents();
         }
 
         // every second

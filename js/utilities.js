@@ -30,13 +30,28 @@ var SI = {},
          */
         listenTo: function (id, callback, scope) {
 
-            _.events[id] = _.events[id] || [];
+            var prop;
 
-            if (scope) {
-                callback.scope = scope;
+            if (typeof id === 'object') {
+
+                for (prop in id) {
+                    if (id.hasOwnProperty(prop)) {
+                        _.events[prop] = _.events[prop] || [];
+                        id[prop].scope = callback || null;
+
+                        _.events[prop].push(id[prop]);
+                    }
+                }
+            } else {
+
+                _.events[id] = _.events[id] || [];
+
+                if (scope) {
+                    callback.scope = scope;
+                }
+
+                _.events[id].push(callback);
             }
-
-            _.events[id].push(callback);
         },
 
 

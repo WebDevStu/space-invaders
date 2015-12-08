@@ -4,8 +4,10 @@
 }
 body{
     background: #000;
+    background: #333;
     text-align: center;
 }
 canvas{
     margin: 0 auto;
+    background: #000;
 }
