@@ -3,16 +3,32 @@
 (function () {
 
     var canvas = new SI.Canvas(),
+        running = true,
 
         /**
          * render
          */
         render = function (frame) {
 
-            _.trigger('frame:change', frame);
+            if (running) {
 
-            window.requestAnimationFrame(render);
+                _.trigger('frame:change', frame);
+
+                window.requestAnimationFrame(render);
+            }
         };
+
+
+    // pause the game on blur
+    window.addEventListener('blur', function () {
+        running = false;
+    });
+
+    window.addEventListener('focus', function () {
+        running = true;
+        _.trigger('frame:change', window.requestAnimationFrame(render));
+    });
+
 
 
 
@@ -27,5 +43,5 @@
 
 
     // start game
-    window.requestAnimationFrame(render);
+    _.trigger('frame:change', window.requestAnimationFrame(render));
 } ());

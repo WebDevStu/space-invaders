@@ -3,8 +3,6 @@
 
 SI.Component = function (image, options) {
 
-    //_.listenTo('image:swap', this.swapSprite, this);
-
     this.image = image;
     this.options = options;
 
@@ -71,8 +69,8 @@ _.extend(SI.Component.prototype, {
             (this.options.arms) ? image.y : image.height,
             image.width,
             image.height,
-            (this.options.index * 44) + this.options.left, // change with x axis counter
-            (this.options.alien * 40) + this.options.top, // change with y axis counter
+            (this.options.index * 44) + this.options.left,
+            (this.options.alien * 40) + this.options.top,
             image.width,
             image.height
         );

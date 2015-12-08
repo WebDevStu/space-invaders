@@ -1,12 +1,6 @@
 
 SI.Canvas = function () {
 
-    // listeners with scope
-    _.listenTo({
-        'frame:change': this.draw,
-        'sprite:loaded': this.addComponents
-    }, this);
-
     // canvas
     this.canvas = document.createElement('canvas');
     this.canvas.height = 500;
@@ -17,6 +11,12 @@ SI.Canvas = function () {
 
     // append
     document.body.appendChild(this.canvas);
+
+    // listeners with scope
+    _.listenTo({
+        'frame:change': this.draw,
+        'sprite:loaded': this.render
+    }, this);
 
     // main image sprite
     this.sprite = new Image();
@@ -30,8 +30,8 @@ SI.Canvas = function () {
 
     this.armsUp = true;
     this.steps = 0;
-    this.top = 40;
-    this.left = 40;
+    this.top = 20;
+    this.left = 0;
     this.ltr = true;
 };
 
@@ -45,17 +45,13 @@ _.extend(SI.Canvas.prototype, {
      */
     draw: function (frame) {
 
-        frame = Math.round(frame / 10) * 10;
+        console.log(frame);
 
-        // every half second
-        if (frame % 500 === 0) {
-            // clear and re-draw
-            this.armsUp = !this.armsUp;
-            this.render();
-        }
+        frame = Math.round(frame / 10) * 10;
 
         // every second
         if (frame % 1000 === 0) {
+            this.armsUp = !this.armsUp;
             this.moveCoordinates();
         }
     },
@@ -101,17 +97,24 @@ _.extend(SI.Canvas.prototype, {
     },
 
 
-
+    /**
+     * moveCoordinates
+     */
     moveCoordinates: function () {
 
-        var xPadding,
-            yPadding;
-        // x5 steps per row
+        var xPadding;
 
-        this.step += 1;
+        this.steps += 1;
 
+        xPadding = Math.floor(this.steps / 12);
 
-        xPadding = Math.floor(this.step / 5);
-        yPadding = 0;
+        if (this.steps % 12 === 0) {
+            this.top = ((xPadding) * 20) + 20;
+            this.steps += 1;
+        } else {
+            this.left = _.isEven(xPadding) ? (this.left + 20) : (this.left - 20);
+        }
+
+        this.render();
     }
 });

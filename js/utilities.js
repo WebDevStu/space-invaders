@@ -76,7 +76,7 @@ var SI = {},
             if (_.events[id] && _.events[id].length) {
 
                 _.events[id].forEach(function (callback) {
-                    callback.call(callback.scope || this, args);
+                    callback.apply(callback.scope || this, args);
                 }, this);
             }
         },
