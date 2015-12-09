@@ -82,10 +82,23 @@ var SI = {},
         },
 
 
+        /**
+         * isEven
+         *
+         * @param n {Number}
+         * @returns {boolean}
+         */
         isEven: function (n) {
             return (n % 2 === 0);
         },
 
+
+        /**
+         * isOdd
+         *
+         * @param n {Number}
+         * @returns {boolean}
+         */
         isOdd: function (n) {
             return (n % 2 !== 0);
         }

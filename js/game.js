@@ -8,11 +8,11 @@
         /**
          * render
          */
-        render = function (frame) {
+        render = function () {
 
             if (running) {
 
-                _.trigger('frame:change', frame);
+                _.trigger('frame:change');
 
                 window.requestAnimationFrame(render);
             }

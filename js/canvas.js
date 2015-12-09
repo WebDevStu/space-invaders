@@ -18,21 +18,18 @@ SI.Canvas = function () {
         'sprite:loaded': this.render
     }, this);
 
-    // main image sprite
-    this.sprite = new Image();
-    this.sprite.src = './image/components.png';
-    this.sprite.onload = function () {
-        _.trigger('sprite:loaded');
-    };
-
     // all components & config
     this.aliens = {};
 
     this.armsUp = true;
-    this.steps = 0;
-    this.top = 20;
-    this.left = 0;
-    this.ltr = true;
+    this.steps  = 0;
+    this.top    = 20;
+    this.left   = 0;
+    this.ltr    = true;
+
+    this.frame  = 0;
+
+    this.createSprite();
 };
 
 
@@ -40,18 +37,33 @@ _.extend(SI.Canvas.prototype, {
 
 
     /**
-     * draw
-     * @param frame
+     * createSprite
      */
-    draw: function (frame) {
+    createSprite: function () {
 
-        console.log(frame);
+        // main image sprite
+        this.sprite = new Image();
+        this.sprite.src = './image/components.png';
 
-        frame = Math.round(frame / 10) * 10;
+        this.sprite.onload = function () {
+            _.trigger('sprite:loaded');
+        };
+    },
 
-        // every second
-        if (frame % 1000 === 0) {
+
+    /**
+     * draw
+     */
+    draw: function () {
+
+        this.frame += 1;
+
+        // every second(ish)
+        if (this.frame >= 60) {
+
+            this.frame = 0;
             this.armsUp = !this.armsUp;
+
             this.moveCoordinates();
         }
     },
