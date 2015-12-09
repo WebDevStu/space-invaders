@@ -128,7 +128,9 @@ _.extend(SI.Canvas.prototype, {
                 // @TODO
                 top: 440,
                 left: 20
-            })
+            });
+
+            this.aliens.spaceShip.draw();
         } else {
             this.aliens.spaceShip = new SI.Component(this.sprite, {
                 ctx: this.ctx,
@@ -163,7 +165,7 @@ _.extend(SI.Canvas.prototype, {
 
 
     /**
-     * startShip 
+     * startShip
      *
      * @param evt {Event.Object}
      */
