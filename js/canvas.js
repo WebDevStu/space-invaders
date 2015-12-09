@@ -4,7 +4,7 @@ SI.Canvas = function () {
     // canvas
     this.canvas = document.createElement('canvas');
     this.canvas.height = 500;
-    this.canvas.width = 700;
+    this.canvas.width = 690;
 
     // context
     this.ctx = this.canvas.getContext('2d');
@@ -14,8 +14,10 @@ SI.Canvas = function () {
 
     // listeners with scope
     _.listenTo({
-        'frame:change': this.draw,
-        'sprite:loaded': this.render
+        'frame:change':     this.draw,
+        'sprite:loaded':    this.render,
+        'key:down':         this.startShip,
+        'key:up':           this.stopShip
     }, this);
 
     // all components & config
@@ -24,7 +26,7 @@ SI.Canvas = function () {
     this.armsUp = true;
     this.steps  = 0;
     this.top    = 20;
-    this.left   = 0;
+    this.left   = 20;
     this.ltr    = true;
 
     this.frame  = 0;
@@ -97,13 +99,42 @@ _.extend(SI.Canvas.prototype, {
             yAxis = Math.floor(i / 10);
             xAxis = i - (yAxis * 10);
 
-            this.aliens[i] = new SI.Component(this.sprite, {
-                ctx:    this.ctx,
-                alien:  yAxis,
-                index:  xAxis,
-                arms:   this.armsUp,
-                top:    this.top,
-                left:   this.left
+            if (this.aliens[i]) {
+
+                _.extend(this.aliens[i].options, {
+                    arms: this.armsUp,
+                    top: this.top,
+                    left: this.left
+                });
+
+                this.aliens[i].draw();
+
+            } else {
+
+                this.aliens[i] = new SI.Component(this.sprite, {
+                    ctx: this.ctx,
+                    alien: yAxis,
+                    index: xAxis,
+                    arms: this.armsUp,
+                    top: this.top,
+                    left: this.left
+                });
+            }
+        }
+
+        // space ship
+        if (this.aliens.spaceShip) {
+            _.extend(this.aliens.spaceShip.options, {
+                // @TODO
+                top: 440,
+                left: 20
+            })
+        } else {
+            this.aliens.spaceShip = new SI.Component(this.sprite, {
+                ctx: this.ctx,
+                ship: true,
+                top: 440,
+                left: 20
             });
         }
     },
@@ -128,5 +159,27 @@ _.extend(SI.Canvas.prototype, {
         }
 
         this.render();
+    },
+
+
+    /**
+     * startShip 
+     *
+     * @param evt {Event.Object}
+     */
+    startShip: function (evt) {
+
+        var keyCode = evt.keyCode;
+
+        // left and right arrows only for now
+        if (keyCode === 39 || keyCode === 37) {
+            //this.moveShip = 'something'
+        }
+
+
+    },
+
+    stopShip: function (evt) {
+        console.log('stop', evt);
     }
 });

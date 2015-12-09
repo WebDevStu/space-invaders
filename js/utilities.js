@@ -7,7 +7,7 @@ var SI = {},
 
         /**
          * extend
-         * extends one object into another
+         * extends one object into another (hard over-write)
          *
          * @param object {Object}
          * @param extend {Object}
@@ -17,7 +17,7 @@ var SI = {},
 
             for (var prop in extend) {
                 if (extend.hasOwnProperty(prop)) {
-                    object[prop] = object[prop] || extend[prop];
+                    object[prop] = extend[prop];
                 }
             }
 

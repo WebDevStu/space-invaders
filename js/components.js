@@ -34,19 +34,25 @@ _.extend(SI.Component.prototype, {
         y: 0
     }, {
         // space shit
-        width: 0,
-        height: 0,
+        width: 26,
+        height: 20,
         x: 0,
-        y: 0
+        y: 53
     }],
 
 
+    /**
+     * draw
+     */
     draw: function () {
 
         var component,
             image;
 
         switch (this.options.alien) {
+            case 0:
+                component = this.options.alien;
+                break;
             case 1:
             case 2:
                 component = 1;
@@ -58,21 +64,37 @@ _.extend(SI.Component.prototype, {
                 break;
 
             default:
-                component = this.options.alien;
+                component = 3;
         }
 
         image = this.matrix[component];
 
-        this.options.ctx.drawImage(
-            this.image,
-            image.x,
-            (this.options.arms) ? image.y : image.height,
-            image.width,
-            image.height,
-            (this.options.index * 44) + this.options.left,
-            (this.options.alien * 40) + this.options.top,
-            image.width,
-            image.height
-        );
+        if (this.options.ship) {
+
+            this.options.ctx.drawImage(
+                this.image,
+                image.x,
+                image.y,
+                image.width,
+                image.height,
+                this.options.left,
+                this.options.top,
+                image.width,
+                image.height
+            );
+
+        } else {
+            this.options.ctx.drawImage(
+                this.image,
+                image.x,
+                (this.options.arms) ? image.y : image.height,
+                image.width,
+                image.height,
+                (this.options.index * 44) + this.options.left,
+                (this.options.alien * 40) + this.options.top,
+                image.width,
+                image.height
+            );
+        }
     }
 });
