@@ -4,7 +4,7 @@ SI.Canvas = function () {
     // canvas
     this.canvas = document.createElement('canvas');
     this.canvas.height = 500;
-    this.canvas.width = 690;
+    this.canvas.width = 700;
 
     // context
     this.ctx = this.canvas.getContext('2d');
@@ -30,6 +30,8 @@ SI.Canvas = function () {
     this.ltr    = true;
 
     this.frame  = 0;
+    this.moveShip = null;
+    this.shipLeft = 20;
 
     this.createSprite();
 };
@@ -67,6 +69,20 @@ _.extend(SI.Canvas.prototype, {
             this.armsUp = !this.armsUp;
 
             this.moveCoordinates();
+        }
+
+        if (this.moveShip) {
+
+            if (this.moveShip === 39) {
+                this.shipLeft += 5
+            } else if (this.moveShip === 37) {
+                this.shipLeft -= 5
+            }
+
+            this.shipLeft = Math.max(20, this.shipLeft);
+            this.shipLeft = Math.min(660, this.shipLeft);
+
+            this.render();
         }
     },
 
@@ -125,9 +141,8 @@ _.extend(SI.Canvas.prototype, {
         // space ship
         if (this.aliens.spaceShip) {
             _.extend(this.aliens.spaceShip.options, {
-                // @TODO
                 top: 440,
-                left: 20
+                left: this.shipLeft
             });
 
             this.aliens.spaceShip.draw();
@@ -167,21 +182,28 @@ _.extend(SI.Canvas.prototype, {
     /**
      * startShip
      *
-     * @param evt {Event.Object}
+     * @param keyCode {Number}
      */
-    startShip: function (evt) {
-
-        var keyCode = evt.keyCode;
+    startShip: function (keyCode) {
 
         // left and right arrows only for now
         if (keyCode === 39 || keyCode === 37) {
-            //this.moveShip = 'something'
+
+            this.moveShip = keyCode;
+            this.draw();
         }
 
-
+        if (keyCode === 32) {
+            // fire gun
+            console.log('fire gun');
+        }
     },
 
-    stopShip: function (evt) {
-        console.log('stop', evt);
+
+    /**
+     * stopShip
+     */
+    stopShip: function () {
+        this.moveShip = null;
     }
 });

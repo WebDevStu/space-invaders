@@ -37,8 +37,8 @@
         _.trigger('key:down', evt.keyCode);
     });
 
-    document.addEventListener('keyup', function (evt) {
-        _.trigger('key:up', evt.keyCode);
+    document.addEventListener('keyup', function () {
+        _.trigger('key:up');
     });
 
 
