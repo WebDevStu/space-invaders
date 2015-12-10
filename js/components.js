@@ -38,6 +38,12 @@ _.extend(SI.Component.prototype, {
         height: 20,
         x: 0,
         y: 53
+    }, {
+        // bullet
+        width: 2,
+        height: 5,
+        x: 12,
+        y: 68
     }],
 
 
@@ -64,12 +70,31 @@ _.extend(SI.Component.prototype, {
                 break;
 
             default:
-                component = 3;
+
+                if (this.options.ship) {
+                    component = 3;
+                } else {
+                    component = 4;
+                }
         }
 
         image = this.matrix[component];
 
         if (this.options.ship) {
+
+            this.options.ctx.drawImage(
+                this.image,
+                image.x,
+                image.y,
+                image.width,
+                image.height,
+                this.options.left,
+                this.options.top,
+                image.width,
+                image.height
+            );
+
+        } else if (this.options.bullet) {
 
             this.options.ctx.drawImage(
                 this.image,

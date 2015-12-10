@@ -23,17 +23,22 @@ SI.Canvas = function () {
     // all components & config
     this.aliens = {};
 
-    this.armsUp = true;
-    this.steps  = 0;
-    this.top    = 20;
-    this.left   = 20;
-    this.ltr    = true;
+    this.config = {
+        arms: true,
+        steps: 0,
+        frame: 0
+    };
 
-    this.frame  = 0;
+    this.coords = {
+        x: 20,
+        y: 20
+    };
+
+    this.shipPos = 20;
     this.moveShip = null;
-    this.shipLeft = 20;
+    this.bullet = null;
 
-    this.createSprite();
+    this.loadSprite();
 };
 
 
@@ -41,9 +46,9 @@ _.extend(SI.Canvas.prototype, {
 
 
     /**
-     * createSprite
+     * loadSprite
      */
-    createSprite: function () {
+    loadSprite: function () {
 
         // main image sprite
         this.sprite = new Image();
@@ -60,13 +65,13 @@ _.extend(SI.Canvas.prototype, {
      */
     draw: function () {
 
-        this.frame += 1;
+        this.config.frame += 1;
 
         // every second(ish)
-        if (this.frame >= 60) {
+        if (this.config.frame >= 60) {
 
-            this.frame = 0;
-            this.armsUp = !this.armsUp;
+            this.config.frame = 0;
+            this.config.arms = !this.config.arms;
 
             this.moveCoordinates();
         }
@@ -74,16 +79,25 @@ _.extend(SI.Canvas.prototype, {
         if (this.moveShip) {
 
             if (this.moveShip === 39) {
-                this.shipLeft += 5
+                this.shipPos += 5
             } else if (this.moveShip === 37) {
-                this.shipLeft -= 5
+                this.shipPos -= 5
             }
 
-            this.shipLeft = Math.max(20, this.shipLeft);
-            this.shipLeft = Math.min(660, this.shipLeft);
-
-            this.render();
+            this.shipPos = Math.max(20, this.shipPos);
+            this.shipPos = Math.min(660, this.shipPos);
         }
+
+        if (this.bullet) {
+            this.bullet.y -= 6;
+
+            if (this.bullet.y < 0) {
+                this.bullet = null;
+            }
+        }
+
+        // call render
+        this.render();
     },
 
 
@@ -118,9 +132,9 @@ _.extend(SI.Canvas.prototype, {
             if (this.aliens[i]) {
 
                 _.extend(this.aliens[i].options, {
-                    arms: this.armsUp,
-                    top: this.top,
-                    left: this.left
+                    arms: this.config.arms,
+                    top: this.coords.y,
+                    left: this.coords.x
                 });
 
                 this.aliens[i].draw();
@@ -131,18 +145,18 @@ _.extend(SI.Canvas.prototype, {
                     ctx: this.ctx,
                     alien: yAxis,
                     index: xAxis,
-                    arms: this.armsUp,
-                    top: this.top,
-                    left: this.left
+                    arms: this.config.arms,
+                    top: this.coords.y,
+                    left: this.coords.x
                 });
             }
         }
 
-        // space ship
+        // space ship & bullet
         if (this.aliens.spaceShip) {
             _.extend(this.aliens.spaceShip.options, {
                 top: 440,
-                left: this.shipLeft
+                left: this.shipPos
             });
 
             this.aliens.spaceShip.draw();
@@ -151,8 +165,29 @@ _.extend(SI.Canvas.prototype, {
                 ctx: this.ctx,
                 ship: true,
                 top: 440,
-                left: 20
+                left: this.shipPos
             });
+        }
+
+        if (this.bullet) {
+            if (this.aliens.bullet) {
+                _.extend(this.aliens.bullet.options, {
+                    top: this.bullet.y,
+                    left: this.bullet.x
+                });
+
+                this.aliens.bullet.draw();
+            } else {
+
+                this.aliens.bullet = new SI.Component(this.sprite, {
+                    ctx: this.ctx,
+                    bullet: true,
+                    top: this.bullet.y,
+                    left: this.bullet.x
+                });
+            }
+
+            this.findBulletTarget();
         }
     },
 
@@ -164,15 +199,15 @@ _.extend(SI.Canvas.prototype, {
 
         var xPadding;
 
-        this.steps += 1;
+        this.config.steps += 1;
 
-        xPadding = Math.floor(this.steps / 12);
+        xPadding = Math.floor(this.config.steps / 12);
 
-        if (this.steps % 12 === 0) {
-            this.top = ((xPadding) * 20) + 20;
-            this.steps += 1;
+        if (this.config.steps % 12 === 0) {
+            this.coords.y = ((xPadding) * 20) + 20;
+            this.config.steps += 1;
         } else {
-            this.left = _.isEven(xPadding) ? (this.left + 20) : (this.left - 20);
+            this.coords.x = _.isEven(xPadding) ? (this.coords.x + 20) : (this.coords.x - 20);
         }
 
         this.render();
@@ -193,9 +228,12 @@ _.extend(SI.Canvas.prototype, {
             this.draw();
         }
 
-        if (keyCode === 32) {
+        if (keyCode === 32 && !this.bullet) {
             // fire gun
-            console.log('fire gun');
+            this.bullet = {
+                x: this.shipPos + 12,
+                y: 440
+            };
         }
     },
 
@@ -205,5 +243,16 @@ _.extend(SI.Canvas.prototype, {
      */
     stopShip: function () {
         this.moveShip = null;
+    },
+
+
+    /**
+     * findBulletTarget
+     * find a hit against an alien
+     */
+    findBulletTarget: function () {
+
+
+        
     }
 });
