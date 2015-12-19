@@ -122,12 +122,15 @@ _.extend(SI.Canvas.prototype, {
             yAxis = 0,
             i;
 
-        this.aliens.length = 0;
+        for (i = 0; i < 45; i += 1) {
 
-        for (i = 0; i < 50; i += 1) {
+            yAxis = Math.floor(i / 9);
+            xAxis = i - (yAxis * 9);
 
-            yAxis = Math.floor(i / 10);
-            xAxis = i - (yAxis * 10);
+            // make case for a dead alien
+            if (this.aliens[i] && this.aliens[i].dead) {
+                continue;
+            }
 
             if (this.aliens[i]) {
 
@@ -252,7 +255,6 @@ _.extend(SI.Canvas.prototype, {
      */
     findBulletTarget: function () {
 
-
-        
+        console.log(this.bullet);
     }
 });

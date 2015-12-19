@@ -115,7 +115,7 @@ _.extend(SI.Component.prototype, {
                 (this.options.arms) ? image.y : image.height,
                 image.width,
                 image.height,
-                (this.options.index * 44) + this.options.left,
+                (this.options.index * 50) + this.options.left,
                 (this.options.alien * 40) + this.options.top,
                 image.width,
                 image.height
