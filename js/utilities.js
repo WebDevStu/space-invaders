@@ -101,5 +101,18 @@ var SI = {},
          */
         isOdd: function (n) {
             return (n % 2 !== 0);
+        },
+
+
+        /**
+         * isBetween
+         *
+         * @param lower
+         * @param upper
+         * @param number
+         * @returns {boolean}
+         */
+        isBetween: function (lower, upper, number) {
+            return (number >= lower && number <= upper);
         }
     };

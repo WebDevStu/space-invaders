@@ -255,7 +255,9 @@ _.extend(SI.Canvas.prototype, {
      */
     findBulletTarget: function () {
 
-        var alien;
+        var alien,
+            opts,
+            config;
 
         // {x: x, y: y}
         //console.log(this.bullet);
@@ -264,7 +266,18 @@ _.extend(SI.Canvas.prototype, {
             if (this.aliens.hasOwnProperty(alien)) {
 
                 // left & top
-                console.log(this.aliens[alien].options);
+                opts = this.aliens[alien].options;
+                config = this.aliens[alien].config;
+
+                if (!opts.ship && !opts.bullet) {
+
+                    if (
+                        _.isBetween(config.left, config.left + config.width, this.bullet.x) &&
+                        _.isBetween(config.top, config.top + config.height, this.bullet.y)
+                    ) {
+                        console.log(opts, config);
+                    }
+                }
             }
         }
     }

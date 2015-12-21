@@ -78,7 +78,7 @@ _.extend(SI.Component.prototype, {
                 }
         }
 
-        image = this.matrix[component];
+        image = this.config = this.matrix[component];
 
         if (this.options.ship) {
 
@@ -109,6 +109,7 @@ _.extend(SI.Component.prototype, {
             );
 
         } else {
+
             this.options.ctx.drawImage(
                 this.image,
                 image.x,
@@ -120,6 +121,12 @@ _.extend(SI.Component.prototype, {
                 image.width,
                 image.height
             );
+
+
+            _.extend(this.config, {
+                left: (this.options.index * 50) + this.options.left,
+                top: (this.options.alien * 40) + this.options.top
+            });
         }
     }
 });
