@@ -255,6 +255,17 @@ _.extend(SI.Canvas.prototype, {
      */
     findBulletTarget: function () {
 
-        console.log(this.bullet);
+        var alien;
+
+        // {x: x, y: y}
+        //console.log(this.bullet);
+
+        for (alien in this.aliens) {
+            if (this.aliens.hasOwnProperty(alien)) {
+
+                // left & top
+                console.log(this.aliens[alien].options);
+            }
+        }
     }
 });
