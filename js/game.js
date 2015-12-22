@@ -4,6 +4,7 @@
 
     var canvas = new SI.Canvas(),
         running = true,
+        score = 0,
 
         /**
          * render
