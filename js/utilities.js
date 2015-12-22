@@ -26,6 +26,27 @@ var SI = {},
 
 
         /**
+         * clone
+         * shallow clone of an object
+         *
+         * @param extend {Object}
+         * @returns {Object}
+         */
+        clone: function (extend) {
+
+            var object = {};
+
+            for (var prop in extend) {
+                if (extend.hasOwnProperty(prop)) {
+                    object[prop] = extend[prop];
+                }
+            }
+
+            return object;
+        },
+
+
+        /**
          * events object
          */
         events: {},

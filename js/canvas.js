@@ -62,12 +62,13 @@ _.extend(SI.Canvas.prototype, {
 
     /**
      * draw
+     * main draw method triggered each animation frame request
      */
     draw: function () {
 
         this.config.frame += 1;
 
-        // every second(ish)
+        // every second(ish) move the components
         if (this.config.frame >= 60) {
 
             this.config.frame = 0;
@@ -76,6 +77,7 @@ _.extend(SI.Canvas.prototype, {
             this.moveCoordinates();
         }
 
+        // if the users is moving the ship, adjust position
         if (this.moveShip) {
 
             if (this.moveShip === 39) {
@@ -88,6 +90,7 @@ _.extend(SI.Canvas.prototype, {
             this.shipPos = Math.min(660, this.shipPos);
         }
 
+        // if bullet is being fired, amend position
         if (this.bullet) {
             this.bullet.y -= 6;
 
@@ -122,7 +125,7 @@ _.extend(SI.Canvas.prototype, {
             yAxis = 0,
             i;
 
-        for (i = 0; i < 1; i += 1) {
+        for (i = 0; i < 45; i += 1) {
 
             yAxis = Math.floor(i / 9);
             xAxis = i - (yAxis * 9);
@@ -269,11 +272,12 @@ _.extend(SI.Canvas.prototype, {
                 return;
             }
 
-            // halve the options each statement
-            if (_.isBetween(config.left, (config.left + config.width), this.bullet.x)) {
-                if (_.isBetween(config.top, (config.top + config.height), this.bullet.y)) {
-                    component.dying = true;
-                }
+            if (
+                _.isBetween(config.left, (config.left + config.width), this.bullet.x) &&
+                _.isBetween(config.top, (config.top + config.height), this.bullet.y)
+            ) {
+                component.dying = true;
+                this.bullet.y = 0;;
             }
         }, this);
     }

@@ -109,7 +109,7 @@ _.extend(SI.Component.prototype, {
             component = 5;
         }
 
-        image = this.config = this.matrix[component];
+        image = this.matrix[component];
 
         if (this.options.ship || this.options.bullet) {
 
@@ -140,10 +140,9 @@ _.extend(SI.Component.prototype, {
             );
 
             // update config on the class
-            _.extend(this.config, {
-                left: (this.options.index * 50) + this.options.left,
-                top: (this.options.alien * 40) + this.options.top
-            });
+            this.config = _.clone(image);
+            this.config.left = (this.options.index * 50) + this.options.left;
+            this.config.top = (this.options.alien * 40) + this.options.top
         }
     }
 });
