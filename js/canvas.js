@@ -17,7 +17,8 @@ SI.Canvas = function () {
         'frame:change':     this.draw,
         'sprite:loaded':    this.render,
         'key:down':         this.startShip,
-        'key:up':           this.stopShip
+        'key:up':           this.stopShip,
+        'game:over':        this.gameOver
     }, this);
 
     // all components & config
@@ -125,7 +126,6 @@ _.extend(SI.Canvas.prototype, {
             yAxis = 0,
             component,
             i;
-
 
         for (i = 0; i < 45; i += 1) {
 
@@ -279,6 +279,9 @@ _.extend(SI.Canvas.prototype, {
                 _.isBetween(config.left, (config.left + config.width), this.bullet.x) &&
                 _.isBetween(config.top, (config.top + config.height), this.bullet.y)
             ) {
+                // @TODO get the alien score and total up
+                console.log(component.score);
+
                 component.dying = true;
                 this.bullet.y = 0;
 
@@ -300,5 +303,16 @@ _.extend(SI.Canvas.prototype, {
         if (dead.length === 45) {
             _.triger('game:over');
         }
+    },
+
+
+
+
+    gameOver: function () {
+
+        console.log('game over');
+
+        // @TODO add game over notice to the canvas
+
     }
 });

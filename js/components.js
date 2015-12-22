@@ -9,6 +9,7 @@ SI.Component = function (image, options) {
     this.dying  = false;
     this.dead   = false;
     this.fades  = 0;
+    this.score  = 0;
 
     this.draw();
 };
@@ -91,14 +92,17 @@ _.extend(SI.Component.prototype, {
 
         switch (this.options.alien) {
             case 0:
+                this.score = 30;
                 return this.options.alien;
 
             case 1:
             case 2:
+                this.score = 20;
                 return 1;
 
             case 3:
             case 4:
+                this.score = 10;
                 return 2;
 
             default:
