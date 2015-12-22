@@ -123,21 +123,24 @@ _.extend(SI.Canvas.prototype, {
 
         var xAxis = 0,
             yAxis = 0,
+            component,
             i;
+
 
         for (i = 0; i < 45; i += 1) {
 
+            component = this.components[i];
             yAxis = Math.floor(i / 9);
             xAxis = i - (yAxis * 9);
 
             // make case for a dead alien
-            if (this.components[i] && this.components[i].dead) {
+            if (component && component.dead) {
                 continue;
             }
 
-            if (this.components[i]) {
+            if (component) {
 
-                this.components[i].update({
+                component.update({
                     arms:   this.config.arms,
                     top:    this.coords.y,
                     left:   this.coords.x
@@ -279,13 +282,23 @@ _.extend(SI.Canvas.prototype, {
                 component.dying = true;
                 this.bullet.y = 0;
 
-                //this.checkForEndGame()
+                this.checkLivingAliens();
             }
         }, this);
     },
 
 
-    checkForEndGame: function () {
+    /**
+     * checkLivingAliens
+     */
+    checkLivingAliens: function () {
 
+        var dead = _.values(this.components).filter(function (alien) {
+            return alien.dying;
+        }, this);
+
+        if (dead.length === 45) {
+            _.triger('game:over');
+        }
     }
 });

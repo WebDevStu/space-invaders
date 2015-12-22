@@ -42,4 +42,9 @@
 
     // start game
     _.trigger('frame:change', window.requestAnimationFrame(render));
+
+    // listen for the end game
+    _.listenTo('game:over', function () {
+        running = false;
+    });
 } ());

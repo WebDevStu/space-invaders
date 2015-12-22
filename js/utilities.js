@@ -135,5 +135,26 @@ var SI = {},
          */
         isBetween: function (lower, upper, number) {
             return (number >= lower && number <= upper);
+        },
+
+
+        /**
+         * values
+         *
+         * @param object {Object}
+         * @returns {Array}
+         */
+        values: function (object) {
+
+            var values = [],
+                prop;
+
+            for (prop in object) {
+                if (object.hasOwnProperty(prop)) {
+                    values.push(object[prop]);
+                }
+            }
+
+            return values;
         }
     };
