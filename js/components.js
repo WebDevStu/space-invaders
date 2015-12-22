@@ -6,6 +6,9 @@ SI.Component = function (image, options) {
     this.image = image;
     this.options = options;
 
+    this.dying = false;
+    this.dead = false;
+
     this.draw();
 };
 
@@ -44,7 +47,26 @@ _.extend(SI.Component.prototype, {
         height: 5,
         x: 12,
         y: 68
+    }, {
+        // dead
+        width: 32,
+        height: 20,
+        x: 69,
+        y: 53
     }],
+
+
+    /**
+     * update
+     * updates options and re-draws
+     *
+     * @param opts {Object}
+     */
+    update: function (opts) {
+
+        this.options = _.extend(this.options, opts);
+        this.draw();
+    },
 
 
     /**
@@ -54,6 +76,10 @@ _.extend(SI.Component.prototype, {
 
         var component,
             image;
+
+        if (this.dead) {
+            return;
+        }
 
         switch (this.options.alien) {
             case 0:
@@ -78,23 +104,14 @@ _.extend(SI.Component.prototype, {
                 }
         }
 
+        if (this.dying) {
+            this.dead = true;
+            component = 5;
+        }
+
         image = this.config = this.matrix[component];
 
-        if (this.options.ship) {
-
-            this.options.ctx.drawImage(
-                this.image,
-                image.x,
-                image.y,
-                image.width,
-                image.height,
-                this.options.left,
-                this.options.top,
-                image.width,
-                image.height
-            );
-
-        } else if (this.options.bullet) {
+        if (this.options.ship || this.options.bullet) {
 
             this.options.ctx.drawImage(
                 this.image,
@@ -122,7 +139,7 @@ _.extend(SI.Component.prototype, {
                 image.height
             );
 
-
+            // update config on the class
             _.extend(this.config, {
                 left: (this.options.index * 50) + this.options.left,
                 top: (this.options.alien * 40) + this.options.top

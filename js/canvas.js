@@ -21,7 +21,7 @@ SI.Canvas = function () {
     }, this);
 
     // all components & config
-    this.aliens = {};
+    this.components = {};
 
     this.config = {
         arms: true,
@@ -122,29 +122,27 @@ _.extend(SI.Canvas.prototype, {
             yAxis = 0,
             i;
 
-        for (i = 0; i < 45; i += 1) {
+        for (i = 0; i < 1; i += 1) {
 
             yAxis = Math.floor(i / 9);
             xAxis = i - (yAxis * 9);
 
             // make case for a dead alien
-            if (this.aliens[i] && this.aliens[i].dead) {
+            if (this.components[i] && this.components[i].dead) {
                 continue;
             }
 
-            if (this.aliens[i]) {
+            if (this.components[i]) {
 
-                _.extend(this.aliens[i].options, {
+                this.components[i].update({
                     arms: this.config.arms,
                     top: this.coords.y,
                     left: this.coords.x
                 });
 
-                this.aliens[i].draw();
-
             } else {
 
-                this.aliens[i] = new SI.Component(this.sprite, {
+                this.components[i] = new SI.Component(this.sprite, {
                     ctx: this.ctx,
                     alien: yAxis,
                     index: xAxis,
@@ -156,15 +154,16 @@ _.extend(SI.Canvas.prototype, {
         }
 
         // space ship & bullet
-        if (this.aliens.spaceShip) {
-            _.extend(this.aliens.spaceShip.options, {
+        if (this.components.spaceShip) {
+
+            this.components.spaceShip.update({
                 top: 440,
                 left: this.shipPos
             });
 
-            this.aliens.spaceShip.draw();
         } else {
-            this.aliens.spaceShip = new SI.Component(this.sprite, {
+
+            this.components.spaceShip = new SI.Component(this.sprite, {
                 ctx: this.ctx,
                 ship: true,
                 top: 440,
@@ -173,16 +172,17 @@ _.extend(SI.Canvas.prototype, {
         }
 
         if (this.bullet) {
-            if (this.aliens.bullet) {
-                _.extend(this.aliens.bullet.options, {
+
+            if (this.components.bullet) {
+
+                this.components.bullet.update({
                     top: this.bullet.y,
                     left: this.bullet.x
                 });
 
-                this.aliens.bullet.draw();
             } else {
 
-                this.aliens.bullet = new SI.Component(this.sprite, {
+                this.components.bullet = new SI.Component(this.sprite, {
                     ctx: this.ctx,
                     bullet: true,
                     top: this.bullet.y,
@@ -255,30 +255,26 @@ _.extend(SI.Canvas.prototype, {
      */
     findBulletTarget: function () {
 
-        var alien,
+        var component,
             opts,
             config;
 
-        // {x: x, y: y}
-        //console.log(this.bullet);
+        Object.keys(this.components).forEach(function (alien) {
 
-        for (alien in this.aliens) {
-            if (this.aliens.hasOwnProperty(alien)) {
+            component   = this.components[alien];
+            opts        = component.options;
+            config      = component.config;
 
-                // left & top
-                opts = this.aliens[alien].options;
-                config = this.aliens[alien].config;
+            if (component.dying || component.dead || opts.ship || opts.bullet) {
+                return;
+            }
 
-                if (!opts.ship && !opts.bullet) {
-
-                    if (
-                        _.isBetween(config.left, config.left + config.width, this.bullet.x) &&
-                        _.isBetween(config.top, config.top + config.height, this.bullet.y)
-                    ) {
-                        console.log(opts, config);
-                    }
+            // halve the options each statement
+            if (_.isBetween(config.left, (config.left + config.width), this.bullet.x)) {
+                if (_.isBetween(config.top, (config.top + config.height), this.bullet.y)) {
+                    component.dying = true;
                 }
             }
-        }
+        }, this);
     }
 });
