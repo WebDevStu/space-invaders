@@ -11,7 +11,6 @@
         render = function () {
 
             if (running) {
-
                 _.trigger('frame:change');
 
                 window.requestAnimationFrame(render);
@@ -24,15 +23,14 @@
         running = false;
     });
 
+    // start again on focus
     window.addEventListener('focus', function () {
         running = true;
         _.trigger('frame:change', window.requestAnimationFrame(render));
     });
 
 
-
-
-    // events
+    // DOM events
     document.addEventListener('keydown', function (evt) {
         _.trigger('key:down', evt.keyCode);
     });

@@ -1,17 +1,17 @@
 
 // class for images
-
 SI.Component = function (image, options) {
 
-    this.image = image;
+    this.image  = image;
     this.options = options;
+    this.config = {};
 
-    this.dying = false;
-    this.dead = false;
+    this.dying  = false;
+    this.dead   = false;
+    this.fades  = 0;
 
     this.draw();
 };
-
 
 
 _.extend(SI.Component.prototype, {
@@ -70,46 +70,58 @@ _.extend(SI.Component.prototype, {
 
 
     /**
-     * draw
+     * getComponentType
+     * returns the index of the matrix to determine the sprite coordinates to
+     * use
+     *
+     * @returns {number}
      */
-    draw: function () {
+    getComponentType: function () {
 
-        var component,
-            image;
+        if (this.dying) {
 
-        if (this.dead) {
-            return;
+            if (this.fades >= 5) {
+                this.dead = true;
+            } else {
+                this.fades += 1;
+            }
+
+            return 5;
         }
 
         switch (this.options.alien) {
             case 0:
-                component = this.options.alien;
-                break;
+                return this.options.alien;
+
             case 1:
             case 2:
-                component = 1;
-                break;
+                return 1;
 
             case 3:
             case 4:
-                component = 2;
-                break;
+                return 2;
 
             default:
 
                 if (this.options.ship) {
-                    component = 3;
-                } else {
-                    component = 4;
+                    return 3;
                 }
-        }
 
-        if (this.dying) {
-            this.dead = true;
-            component = 5;
+                return  4;
         }
+    },
 
-        image = this.matrix[component];
+
+
+    /**
+     * draw
+     */
+    draw: function () {
+
+        var component = this.getComponentType(),
+            image = this.matrix[component],
+            left,
+            top;
 
         if (this.options.ship || this.options.bullet) {
 
@@ -127,22 +139,25 @@ _.extend(SI.Component.prototype, {
 
         } else {
 
+            left = (this.options.index * 50) + this.options.left;
+            top = (this.options.alien * 40) + this.options.top;
+
             this.options.ctx.drawImage(
                 this.image,
                 image.x,
                 (this.options.arms) ? image.y : image.height,
                 image.width,
                 image.height,
-                (this.options.index * 50) + this.options.left,
-                (this.options.alien * 40) + this.options.top,
+                left,
+                top,
                 image.width,
                 image.height
             );
 
             // update config on the class
             this.config = _.clone(image);
-            this.config.left = (this.options.index * 50) + this.options.left;
-            this.config.top = (this.options.alien * 40) + this.options.top
+            this.config.left = left;
+            this.config.top = top
         }
     }
 });

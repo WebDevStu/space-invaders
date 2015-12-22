@@ -138,20 +138,20 @@ _.extend(SI.Canvas.prototype, {
             if (this.components[i]) {
 
                 this.components[i].update({
-                    arms: this.config.arms,
-                    top: this.coords.y,
-                    left: this.coords.x
+                    arms:   this.config.arms,
+                    top:    this.coords.y,
+                    left:   this.coords.x
                 });
 
             } else {
 
                 this.components[i] = new SI.Component(this.sprite, {
-                    ctx: this.ctx,
-                    alien: yAxis,
-                    index: xAxis,
-                    arms: this.config.arms,
-                    top: this.coords.y,
-                    left: this.coords.x
+                    ctx:    this.ctx,
+                    alien:  yAxis,
+                    index:  xAxis,
+                    arms:   this.config.arms,
+                    top:    this.coords.y,
+                    left:   this.coords.x
                 });
             }
         }
@@ -167,10 +167,10 @@ _.extend(SI.Canvas.prototype, {
         } else {
 
             this.components.spaceShip = new SI.Component(this.sprite, {
-                ctx: this.ctx,
-                ship: true,
-                top: 440,
-                left: this.shipPos
+                ctx:    this.ctx,
+                ship:   true,
+                top:    440,
+                left:   this.shipPos
             });
         }
 
@@ -179,17 +179,17 @@ _.extend(SI.Canvas.prototype, {
             if (this.components.bullet) {
 
                 this.components.bullet.update({
-                    top: this.bullet.y,
+                    top:  this.bullet.y,
                     left: this.bullet.x
                 });
 
             } else {
 
                 this.components.bullet = new SI.Component(this.sprite, {
-                    ctx: this.ctx,
+                    ctx:    this.ctx,
                     bullet: true,
-                    top: this.bullet.y,
-                    left: this.bullet.x
+                    top:    this.bullet.y,
+                    left:   this.bullet.x
                 });
             }
 
@@ -277,8 +277,15 @@ _.extend(SI.Canvas.prototype, {
                 _.isBetween(config.top, (config.top + config.height), this.bullet.y)
             ) {
                 component.dying = true;
-                this.bullet.y = 0;;
+                this.bullet.y = 0;
+
+                //this.checkForEndGame()
             }
         }, this);
+    },
+
+
+    checkForEndGame: function () {
+
     }
 });
