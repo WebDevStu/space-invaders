@@ -1,4 +1,8 @@
-
+/**
+ * main canvas class
+ *
+ * @method Canvas
+ */
 SI.Canvas = function () {
 
     // canvas
@@ -27,7 +31,8 @@ SI.Canvas = function () {
     this.config = {
         arms: true,
         steps: 0,
-        frame: 0
+        frame: 0,
+        speed: 0
     };
 
     this.coords = {
@@ -40,6 +45,7 @@ SI.Canvas = function () {
     this.bullet = null;
 
     this.score = 0;
+    this.speed = 60;
 
     this.loadSprite();
 };
@@ -70,14 +76,20 @@ _.extend(SI.Canvas.prototype, {
     draw: function () {
 
         this.config.frame += 1;
+        this.config.speed += 1;
 
         // every second(ish) move the components
-        if (this.config.frame >= 60) {
+        if (this.config.frame >= this.speed) {
 
             this.config.frame = 0;
             this.config.arms = !this.config.arms;
 
             this.moveCoordinates();
+        }
+
+        if (this.config.speed >= 60*11) {
+            this.config.speed = 0;
+            this.speed -= 5;
         }
 
         // if the users is moving the ship, adjust position
@@ -102,6 +114,11 @@ _.extend(SI.Canvas.prototype, {
             }
         }
 
+        if (this.coords.y >= 260) {
+            // aliens crash at this point, check for crash
+            _.trigger('game:over');
+        }
+
         // call render
         this.render();
     },
@@ -120,8 +137,9 @@ _.extend(SI.Canvas.prototype, {
 
 
     /**
-     * addComponents
      * creates a new component and draws it to the canvas
+     *
+     * @method addComponents
      */
     addComponents: function () {
 
@@ -206,6 +224,11 @@ _.extend(SI.Canvas.prototype, {
     },
 
 
+    /**
+     * adds the scores to the canvas
+     *
+     * @method addScore
+     */
     addScore: function () {
 
         this.ctx.font = "16px Arial";

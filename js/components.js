@@ -106,15 +106,9 @@ _.extend(SI.Component.prototype, {
                 return 2;
 
             default:
-
-                if (this.options.ship) {
-                    return 3;
-                }
-
-                return  4;
+                return (this.options.ship) ? 3 : 4;
         }
     },
-
 
 
     /**
