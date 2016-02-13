@@ -39,6 +39,8 @@ SI.Canvas = function () {
     this.moveShip = null;
     this.bullet = null;
 
+    this.score = 0;
+
     this.loadSprite();
 };
 
@@ -82,9 +84,9 @@ _.extend(SI.Canvas.prototype, {
         if (this.moveShip) {
 
             if (this.moveShip === 39) {
-                this.shipPos += 5
+                this.shipPos += 5;
             } else if (this.moveShip === 37) {
-                this.shipPos -= 5
+                this.shipPos -= 5;
             }
 
             this.shipPos = Math.max(20, this.shipPos);
@@ -112,7 +114,8 @@ _.extend(SI.Canvas.prototype, {
     render: function () {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.addComponents();
+        this.addComponents().
+            addScore();
     },
 
 
@@ -198,6 +201,16 @@ _.extend(SI.Canvas.prototype, {
 
             this.findBulletTarget();
         }
+
+        return this;
+    },
+
+
+    addScore: function () {
+
+        this.ctx.font = "16px Arial";
+        this.ctx.fillStyle = '#fff';
+        this.ctx.fillText('Score: ' + this.score, 20, 485);
     },
 
 
@@ -279,8 +292,7 @@ _.extend(SI.Canvas.prototype, {
                 _.isBetween(config.left, (config.left + config.width), this.bullet.x) &&
                 _.isBetween(config.top, (config.top + config.height), this.bullet.y)
             ) {
-                // @TODO get the alien score and total up
-                console.log(component.score);
+                this.score += component.score;
 
                 component.dying = true;
                 this.bullet.y = 0;

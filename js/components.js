@@ -161,7 +161,7 @@ _.extend(SI.Component.prototype, {
             // update config on the class
             this.config = _.clone(image);
             this.config.left = left;
-            this.config.top = top
+            this.config.top = top;
         }
     }
 });

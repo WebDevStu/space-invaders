@@ -4,6 +4,17 @@ var SI = {},
 
     _ = {
 
+        callback: function (method) {
+
+            var args = [].slice.call(arguments).slice(1);
+
+            console.log(args);
+
+            return function () {
+                method.call(args);
+            };
+        },
+
 
         /**
          * extend
